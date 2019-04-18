@@ -1,0 +1,27 @@
+path: wordpress
+core download:
+ locale: ja
+core config:
+# dbhost: localhost:/tmp/mysql.sock
+ dbname: simple_wp_shop
+ dbuser: root
+ dbpass: root
+ extra-php: |
+  define( 'ART_ENV', 'development');
+  define( 'ART_ASSET_HOST', '192.168.121.17');
+  define( 'ART_ASSET_PORT', 8081);
+  define( 'WPCF7_LOAD_JS', false);
+  define( 'WPCF7_LOAD_CSS', false);
+  define( 'WPCF7_AUTOP', false);
+core install:
+ title: simple_wp_shop
+ url: 192.168.121.17:8080
+ admin_user: user
+ admin_password: pass
+ admin_email: mail@somehost.somedomain
+server:
+  host: 192.168.121.17
+  port: 8080
+  docroot: wordpress
+  apache_modules:
+    - mod_rewrite

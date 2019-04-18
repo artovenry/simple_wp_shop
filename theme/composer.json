@@ -1,0 +1,17 @@
+{
+    "name": "simple_wp_shop/theme",
+    "authors": [
+        {
+            "name": "artovenry",
+            "email": "artovenry@gmail.com"
+        }
+    ],
+    "require": {
+        "phug/phug": "^0.3.2"
+    },
+    "autoload":{
+      "psr-4":{
+        "": ["lib/"]
+      }
+    }
+}
