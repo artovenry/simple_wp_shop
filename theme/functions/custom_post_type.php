@@ -11,6 +11,30 @@
 //   }
 //
 
+function custom_meta_box($opts){
+  $renderer= function($post, $args)use($opts){
+    extract($opts);
+    wp_nonce_field($nonce_key, $nonce_name);
+    Phug::displayFile(__DIR__ . "/${post_type}.pug", [
+      "post"=>$post,
+      "args"=>$args,
+    ],["expressionLanguage"=>"php"]);
+  };
+  $register= function()use($opts, $renderer){
+    extract($opts);
+    add_meta_box($slug, $label, $renderer, get_current_screen(), $context, $priority);
+  };
+  $callback= function($post_id, $post, $updated)use($opts){
+    extract($opts);
+    if(defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+    if(!current_user_can("edit_post", $post->ID)) return;
+    if(!is_user_logged_in()) return;
+    if(!wp_verify_nonce($_POST[$nonce_name], $nonce_key))return;
+    $callback($post_id, $post, $updated);
+  };
+  return compact("register", "callback");
+}
+
 
 // custom permalink helper for custom_post_type
   // usage: __custom_permalink_for("news", "news/%s")<---- %s is replaced with $post->ID
