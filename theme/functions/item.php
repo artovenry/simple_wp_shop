@@ -13,20 +13,25 @@ add_action("init", function(){
   ];
   // META_BOX
     $meta_box_slug = implode("_", ["metabox", THEME_HASH, $NAME]);
+
     $meta_box=[
       "post_type"  => $NAME,
       "slug"       => $meta_box_slug,
       "label"      => $options["label"],
-      "context"    => "side",
+      "context"    => "normal",
       "priority"   => "core",
       "nonce_key"  => $meta_box_slug,
       "nonce_name" => implode("_", ["nonce", "metabox", $NAME]),
-      "callback"   => function($post_id, $post, $updated){
-        $key= "item_selling_price";
-        $value= $_POST[$key];
-        if(isset($value))update_post_meta($post_id, $key, $value);
-      },
     ];
+    $meta_box["callback"]= function($post_id, $post, $updated){
+      $selling_price= $_POST["item_selling_price"];
+      $status= $_POST["item_status"];
+
+      if($selling_price === '')$selling_price= "0";
+
+      if(isset($selling_price))update_post_meta($post_id, "item_selling_price", $selling_price);
+      if(isset($status))update_post_meta($post_id, "item_status", $status);
+    };
     $options["register_meta_box_cb"] = custom_meta_box($meta_box)["register"];
     add_action("save_post_{$NAME}", custom_meta_box($meta_box)["callback"], 10, 3);
 

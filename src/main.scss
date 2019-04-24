@@ -1,0 +1,27 @@
+html, body{
+  font-size: 12px;
+}
+
+h1, h2, h3, h4, h5, h6{
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+.container{
+  margin: 2rem 3rem 0;
+}
+
+.site-header{
+  .site-title{
+    margin-bottom: 3rem;
+    font-size: 2rem;
+    text-align: center;
+  }
+}
+
+h2{font-size: 1rem;}
+article{
+  border: 1px solid #AAA;
+  border-radius: .5rem;
+  padding: 1.3rem;
+}

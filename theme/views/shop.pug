@@ -15,17 +15,33 @@ html(lang="ja")
     - wp_head()
     script(src="${assetsPath}main.js")
   body(class=get_body_class())
-    #v-app
-      if have_posts()
-        while have_posts()
-          - the_post()
-          article(id="post-".get_the_ID() class=get_post_class("entry"))
-            header.entry-header
-              h2.entry-title: a(href=get_permalink() rel="bookmark"): -the_title()
-            .entry-content
-              - the_content("continue reading")
+    .container
+      header.site-header
+        h1.site-title shop
+      #v-app
+        Cart(:items="cartedItems")
+        //- Checker
+        #showcase
+          for i in [1,2,3,4,5,6,7,8,9]
+            if have_posts()
+              while have_posts()
+                - the_post()
+                - $post_id= get_the_ID()
+                - $post_title= get_the_title()
+                - $selling_price= get_post_meta($post_id, "item_selling_price", true)
+                article(id="post-${post_id}" class=get_post_class("entry"))
+                  header.entry-header
+                    h2.entry-title: a(href=get_permalink() rel="bookmark")= $post_title
+                    .entry-meta
+                      span.item-price price: &yen;#{$selling_price}
+                      a(
+                        href="#"
+                        @click.prevent="add_to_cart({id: ${post_id}, title: '${post_title}', price: '${selling_price}', count: 1})"
+                      ) add to cart
+                  .entry-content
+                    - the_content("continue reading")
     
     //- contact-form-7を描画
-    - add_filter("the_content", function(){return '[contact-form-7 title="shop"]';})
-    - the_content()
+    //- - add_filter("the_content", function(){return '[contact-form-7 title="shop"]';})
+    //- - the_content()
     - wp_footer()

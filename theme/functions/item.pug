@@ -1,4 +1,31 @@
-input(
-  type="number"
-  value= get_post_meta($post->ID, "item_selling_price", true)
-  name="item_selling_price")
+.control-item_selling_price
+  - $item_selling_price= get_post_meta($post->ID, "item_selling_price", true)
+  if $item_selling_price === ""
+    - $item_selling_price= "0"
+  label(for="item_selling_price") 販売価格：
+  input#item_selling_price(
+    type="number"
+    name="item_selling_price"
+    value= $item_selling_price
+  )
+  span.yen 円
+
+.control-item_status
+  - $item_status= get_post_meta($post->ID, "item_status", true)
+
+  mixin item_status($val, $label, $default= false)
+    if empty($item_status)
+      - $checked= $default
+    else
+      - $checked= $item_status === $val
+    div
+      input(type= "radio"
+        id= "item_status_$val", name= "item_status"
+        value= $val, checked= $checked
+      )
+      label(for="item_status_$val")= $label
+
+  +item_status("on_sale", "販売中", true)
+  +item_status("out_of_stock", "在庫切れ")
+  +item_status("finished", "販売終了")
+    
