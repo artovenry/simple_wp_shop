@@ -4,6 +4,7 @@ html(lang="ja")
     meta(charset="utf-8")
     meta(name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover")
     meta(http-equiv="X-UA-Compatible" content="IE=edge")
+    script(src="https://postcode-jp.com/js/postcodejp.js" charset="utf-8")
 
     - $assetsPath= sprintf("http://%s:%s/", ART_ASSET_HOST, ART_ASSET_PORT)
     link(rel="stylesheet" href="${assetsPath}node_modules/bootstrap/dist/css/bootstrap-reboot.css")
@@ -19,8 +20,13 @@ html(lang="ja")
       header.site-header
         h1.site-title shop
       #v-app
-        Cart(:items="cartedItems")
-        //- Checker
+        #cart
+          p cart
+          .cart-detail
+            Cart
+          a(v-show='$store.state.cartedItems.length' href="#" @click.prevent='$store.commit("openChecker")') check out
+          
+        Checker(v-show='$store.state.isCheckerOpen')
         #showcase
           for i in [1,2,3,4,5,6,7,8,9]
             if have_posts()
@@ -29,14 +35,17 @@ html(lang="ja")
                 - $post_id= get_the_ID()
                 - $post_title= get_the_title()
                 - $selling_price= get_post_meta($post_id, "item_selling_price", true)
-                article(id="post-${post_id}" class=get_post_class("entry"))
+                article(
+                  id="post-${post_id}"
+                  class=get_post_class("entry")
+                )
                   header.entry-header
                     h2.entry-title: a(href=get_permalink() rel="bookmark")= $post_title
                     .entry-meta
                       span.item-price price: &yen;#{$selling_price}
                       a(
                         href="#"
-                        @click.prevent="add_to_cart({id: ${post_id}, title: '${post_title}', price: '${selling_price}', count: 1})"
+                        @click.prevent="addToCart('$post_id', '$post_title', '$selling_price')"
                       ) add to cart
                   .entry-content
                     - the_content("continue reading")

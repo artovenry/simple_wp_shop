@@ -38,6 +38,9 @@ module.exports=
             EXTRACT: resourceQuery: /extract/, use: loaders(extract= yes)
             DEFAULT: use: loaders(extract= no)
   plugins: _.compact _.flatten _.values
+    Define:
+      new webpack.DefinePlugin
+        POSTCODE_API_KEY: JSON.stringify(process.env.npm_config_postcode_api_key ? "")
     provide: new webpack.ProvidePlugin
       _ : "underscore"
       TWEEN : "@tweenjs/tween.js"

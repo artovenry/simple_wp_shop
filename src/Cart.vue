@@ -1,27 +1,16 @@
 <template lang="pug">
-  #cart
-    p cart
-    .account-detail
-      template(v-if="items.length")
-        .item(v-for="item in items")
-          span.item-name {{item.title}} :
-          span.item-price &yen;{{item.price}} *
-          span.item-count {{item.count}}
-        .total
-          .total-count TotalCount: {{totalCount}}
-          .total-price TotalPrice: {{totalPrice}}
-      template(v-else)
-        .no-item cart is empty
+  div
+    template(v-if="$store.state.cartedItems.length")
+      .item(v-for="item in $store.state.cartedItems")
+        span.item-name {{item.title}} :
+        span.item-price &yen;{{item.price}} *
+        span.item-count {{item.count}}
+        a(href="#" @click.prevent="$store.commit('add', item)") add
+        a(href="#" @click.prevent="$store.commit('remove', item.id)") remove
+      .total
+        .total-count TotalCount: {{$store.getters.totalCount}}
+        .total-price TotalPrice: {{$store.getters.totalPrice}}
+      a(href="#" @click.prevent="$store.commit('removeAll')") remove all
+    template(v-else)
+      .no-item cart is empty
 </template>
-<style lang="scss" scoped>
-</style>
-
-<script lang="coffee">
-  export default
-    props: ["items"]
-    computed:
-      totalCount: ->
-        _.inject @items, ((m, item)->m + item.count), 0
-      totalPrice: ->
-        _.inject @items, ((m, item)->m + item.price * item.count), 0
-</script>
